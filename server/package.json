@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js",
+  "start": "npx prisma migrate deploy && node index.js",
+  "postinstall": "prisma generate",
     "lint": "eslint src/ index.js --ext .js",
     "test": "cross-env NODE_ENV=test jest --runInBand --forceExit",
     "test:coverage": "cross-env NODE_ENV=test jest --runInBand --forceExit --coverage",
