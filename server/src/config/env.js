@@ -18,7 +18,7 @@ function validateEnv() {
     const issues = result.error.issues
       .map(i => `  ${i.path.join('.')}: ${i.message}`)
       .join('\n');
-    console.error(`\nEnvironment validation failed:\n${issues}\n`);
+    console.error(`\nEnvironment validation failed:\n${issues}\n`); // eslint-disable-line no-console
     process.exit(1);
   }
   return result.data;

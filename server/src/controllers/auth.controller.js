@@ -3,7 +3,7 @@ const env = require('../config/env');
 const authService = require('../services/auth.service');
 const githubService = require('../services/github.service');
 const reposService = require('../services/repos.service');
-const { success, error } = require('../utils/response');
+const { success } = require('../utils/response');
 const { invalidateCache } = require('../middleware/authenticate');
 const logger = require('../utils/logger');
 

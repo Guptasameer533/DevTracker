@@ -120,7 +120,7 @@ async function fetchCommits(accessToken, fullName, since, until, requestId) {
   const allCommits = [];
   let page = 1;
 
-  while (true) {
+  for (;;) {
     const res = await client.get(`/repos/${owner}/${repo}/commits`, {
       params: {
         since: since.toISOString(),
