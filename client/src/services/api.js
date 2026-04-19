@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://dev-tracker-server.vercel.app/api/v1';
+
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: BASE_URL,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
@@ -25,7 +27,7 @@ api.interceptors.response.use(
 export const authApi = {
   me: () => api.get('/auth/me').then((r) => r.data.data),
   logout: () => api.post('/auth/logout').then((r) => r.data),
-  loginUrl: () => '/api/v1/auth/github',
+  loginUrl: () => `${BASE_URL}/auth/github`,
 };
 
 export const reposApi = {
