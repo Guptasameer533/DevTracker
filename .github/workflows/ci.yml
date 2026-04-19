@@ -10,6 +10,15 @@ jobs:
   server:
     name: Server — lint, test, build check
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://test:test@localhost:5432/devtrack_test
+      GITHUB_CLIENT_ID: test_client_id
+      GITHUB_CLIENT_SECRET: test_client_secret
+      SESSION_SECRET: test_session_secret_must_be_at_least_32_chars_long
+      ENCRYPTION_KEY: ${{ secrets.TEST_ENCRYPTION_KEY || 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=' }}
+      FRONTEND_URL: http://localhost:5173
+      PORT: "4000"
 
     steps:
       - uses: actions/checkout@v4
@@ -39,15 +48,6 @@ jobs:
 
       - name: Run tests
         working-directory: server
-        env:
-          NODE_ENV: test
-          DATABASE_URL: postgresql://test:test@localhost:5432/devtrack_test
-          GITHUB_CLIENT_ID: test_client_id
-          GITHUB_CLIENT_SECRET: test_client_secret
-          SESSION_SECRET: test_session_secret_must_be_at_least_32_chars_long
-          ENCRYPTION_KEY: ${{ secrets.TEST_ENCRYPTION_KEY || 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=' }}
-          FRONTEND_URL: http://localhost:5173
-          PORT: "4000"
         run: npm test
 
       - name: Security audit
