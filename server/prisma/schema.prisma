@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(cuid())
+  githubId     String       @unique
+  username     String       @unique
+  email        String?
+  avatarUrl    String?
+  accessToken  String       // AES-256-GCM encrypted
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  sessions     Session[]
+  repositories Repository[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@map("sessions")
+}
+
+model Repository {
+  id           String   @id @default(cuid())
+  userId       String
+  githubRepoId String   @unique
+  name         String
+  fullName     String
+  private      Boolean  @default(false)
+  archived     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commits      Commit[]
+
+  @@index([githubRepoId])
+  @@map("repositories")
+}
+
+model Commit {
+  id          String     @id @default(cuid())
+  repoId      String
+  sha         String
+  message     String
+  authorLogin String
+  timestamp   DateTime
+  url         String
+
+  repository  Repository @relation(fields: [repoId], references: [id], onDelete: Cascade)
+
+  @@unique([repoId, sha])
+  @@index([repoId, timestamp(sort: Desc)])
+  @@index([authorLogin, timestamp(sort: Desc)])
+  @@map("commits")
+}
